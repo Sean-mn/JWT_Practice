@@ -1,7 +1,5 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using System.Text;
-using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -19,7 +17,7 @@ public class LoginManager : MonoBehaviour
             Destroy(this);
     }
 
-    private void TryLogin(string username, string password)
+    public void TryLogin(string username, string password)
     {
         StartCoroutine(LoginCor(username, password));
     }

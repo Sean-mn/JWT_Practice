@@ -9,7 +9,7 @@ public class UI_Login : MonoBehaviour
 
     private void Start()
     {
-        
+        _loginButton?.onClick.AddListener(OnLogined);
     }
 
     private void OnLogined()
@@ -23,6 +23,6 @@ public class UI_Login : MonoBehaviour
             return;
         }
 
-
+        LoginManager.Instance.TryLogin(username, password);
     }
 }
