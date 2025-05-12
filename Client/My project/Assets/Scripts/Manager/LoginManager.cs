@@ -37,16 +37,16 @@ public class LoginManager : MonoBehaviour
         req.SetRequestHeader("Content-Type", "application/json");
         yield return req.SendWebRequest();
 
-        if (request.result == UnityWebRequest.Result.Success)
+        if (req.result == UnityWebRequest.Result.Success)
         {
-            Debug.Log("로그인 성공: " + request.downloadHandler.text);
+            Debug.Log("로그인 성공: " + req.downloadHandler.text);
 
-            TokenResponse tokenResponse = JsonUtility.FromJson<TokenResponse>(request.downloadHandler.text);
+            TokenResponse tokenResponse = JsonUtility.FromJson<TokenResponse>(req.downloadHandler.text);
             PlayerPrefs.SetString("JWT_TOKEN", tokenResponse.token);
         }
         else
         {
-            Debug.LogError("로그인 실패: " + request.error);
+            Debug.LogError("로그인 실패: " + req.error);
         }
     }
 
