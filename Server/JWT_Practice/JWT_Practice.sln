@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JWT_Practice", "JWT_Practice\JWT_Practice.csproj", "{27DF80F1-0576-43A4-817B-0DB5575A72B4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{27DF80F1-0576-43A4-817B-0DB5575A72B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27DF80F1-0576-43A4-817B-0DB5575A72B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27DF80F1-0576-43A4-817B-0DB5575A72B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27DF80F1-0576-43A4-817B-0DB5575A72B4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
