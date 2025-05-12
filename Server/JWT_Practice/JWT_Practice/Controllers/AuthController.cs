@@ -1,5 +1,12 @@
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using JWT_Practice.Models;
+using JWT_Practice.Request;
+using JWT_Practice.Setting;
 
 namespace JWT_Practice.Controllers
 {
@@ -7,5 +14,49 @@ namespace JWT_Practice.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
+        private readonly JwtSettings _jwtSettings;
+        private readonly List<User> _users;
+
+        public AuthController(IOptions<JwtSettings> jwtSettings)
+        {
+            _jwtSettings = jwtSettings.Value;
+            _users = new List<User>
+            {
+                new User { Id = 1, Username = "Sean", PasswordHash = "123456789" }
+            };
+        }
+
+        [HttpPost("login")]
+        public IActionResult Login([FromBody] LoginRequest request)
+        {
+            var user = _users.SingleOrDefault(u => u.Username == request.Username);
+            if (user == null || user.PasswordHash != request.Password)
+                return Unauthorized("알맞지 않은 유저 이름 또는 비밀번호");
+            
+            var token = GenerateToken(user);
+            return Ok(new { token = token });
+        }
+
+        private string GenerateToken(User user)
+        {
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Username)
+            };
+            
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: _jwtSettings.Issuer,
+                audience: _jwtSettings.Audience,
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(_jwtSettings.ExpirationMinutes),
+                signingCredentials: creds
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
     }
 }
