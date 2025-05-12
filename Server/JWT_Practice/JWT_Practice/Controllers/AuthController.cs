@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using JWT_Practice.DBContexts;
 using JWT_Practice.Models;
 using JWT_Practice.Request;
 using JWT_Practice.Setting;
@@ -14,22 +15,20 @@ namespace JWT_Practice.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
+        private readonly LoginDBContext _context;
         private readonly JwtSettings _jwtSettings;
-        private readonly List<User> _users;
 
-        public AuthController(IOptions<JwtSettings> jwtSettings)
+        public AuthController(LoginDBContext context ,IOptions<JwtSettings> jwtSettings)
         {
+            _context = context;
             _jwtSettings = jwtSettings.Value;
-            _users = new List<User>
-            {
-                new User { Id = 1, Username = "Sean", PasswordHash = "123456789" }
-            };
         }
 
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginRequest request)
         {
-            var user = _users.SingleOrDefault(u => u.Username == request.Username);
+            var user = _context.Users.SingleOrDefault(u => u.Username == request.Username);
+            
             if (user == null || user.PasswordHash != request.Password)
                 return Unauthorized("알맞지 않은 유저 이름 또는 비밀번호");
             
@@ -58,5 +57,11 @@ namespace JWT_Practice.Controllers
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+        //
+        // [HttpPost("signup")]
+        // private IActionResult SignUp()
+        // {
+        //     
+        // }
     }
 }

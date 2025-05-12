@@ -44,7 +44,7 @@ public class LoginManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("로그인 실패: " + req.error);
+            Debug.LogWarning("로그인 실패: " + req.error);
         }
     }
 
