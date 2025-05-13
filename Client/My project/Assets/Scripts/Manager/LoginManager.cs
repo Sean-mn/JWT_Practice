@@ -39,8 +39,11 @@ public class LoginManager : MonoBehaviour
         {
             Debug.Log("로그인 성공: " + req.downloadHandler.text);
 
-            TokenResponse tokenResponse = JsonUtility.FromJson<TokenResponse>(req.downloadHandler.text);
-            PlayerPrefs.SetString("JWT_TOKEN", tokenResponse.token);
+            TokenResponse response = JsonUtility.FromJson<TokenResponse>(req.downloadHandler.text);
+            PlayerPrefs.SetString("JWT_TOKEN", response.token);
+            PlayerPrefs.SetString("USERNAME", response.username);
+
+            Debug.Log("로그인한 유저 이름: " + response.username);
         }
         else
         {
@@ -59,5 +62,6 @@ public class LoginManager : MonoBehaviour
     private class TokenResponse
     {
         public string token;
+        public string username;
     }
 }

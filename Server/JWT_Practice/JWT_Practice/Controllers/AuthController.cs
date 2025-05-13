@@ -27,13 +27,19 @@ namespace JWT_Practice.Controllers
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginRequest request)
         {
-            var user = _context.Users.SingleOrDefault(u => u.Username == request.Username);
-            
-            if (user == null || user.PasswordHash != request.Password)
-                return Unauthorized("알맞지 않은 유저 이름 또는 비밀번호");
-            
-            var token = GenerateToken(user);
-            return Ok(new { token = token });
+            try
+            {
+                var user = _context.Users.SingleOrDefault(u => u.Username == request.Username);
+                if (user == null || user.Password != request.Password)
+                    return Unauthorized("알맞지 않은 유저 이름 또는 비밀번호");
+
+                var token = GenerateToken(user);
+                return Ok(new { token = token, username = user.Username });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "서버 오류가 발생했습니다.");
+            }
         }
 
         private string GenerateToken(User user)
@@ -59,7 +65,7 @@ namespace JWT_Practice.Controllers
         }
         
         [HttpPost("signup")]
-        private IActionResult SignUp([FromBody] SignUpRequest request)
+        public IActionResult SignUp([FromBody] SignUpRequest request)
         {
             if (_context.Users.Any(u => u.Username == request.Username))
                 return Conflict("이미 존재하는 유저 이름입니다.");
@@ -67,7 +73,7 @@ namespace JWT_Practice.Controllers
             var newUser = new User
             {
                 Username = request.Username,
-                PasswordHash = request.Password
+                Password = request.Password
             };
             
             _context.Users.Add(newUser);
