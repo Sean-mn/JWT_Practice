@@ -32,7 +32,7 @@ namespace JWT_Practice.Controllers
             try
             {
                 var user = _context.Users.SingleOrDefault(u => u.Username == request.Username);
-                if (user == null || user.Password != request.Password)
+                if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
                 {
                     _logger.LogWarning("로그인 실패 - 유저이름: {Username}", request.Username);
                     return Unauthorized("알맞지 않은 유저 이름 또는 비밀번호");
@@ -50,18 +50,22 @@ namespace JWT_Practice.Controllers
             }
         }
 
+
         [HttpPost("signup")]
         public IActionResult SignUp([FromBody] SignUpRequest request)
         {
-            _logger.LogInformation("회원가입 요청 - 유저이름: {Username}, 비밀번호: {Password}", request.Username, request.Password);
+            _logger.LogInformation("회원가입 요청 - 유저이름: {Username}", request.Username);
 
             if (_context.Users.Any(u => u.Username == request.Username))
                 return Conflict("이미 존재하는 유저 이름입니다.");
 
+            // 비밀번호 해시화
+            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.Password);
+
             var newUser = new User
             {
                 Username = request.Username,
-                Password = request.Password
+                Password = hashedPassword
             };
 
             _context.Users.Add(newUser);
@@ -69,6 +73,7 @@ namespace JWT_Practice.Controllers
 
             return Ok("회원가입 성공");
         }
+
 
         private string GenerateToken(User user)
         {
