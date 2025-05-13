@@ -7,11 +7,15 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION");
+if (string.IsNullOrEmpty(connectionString))
+{
+    throw new Exception("DB_CONNECTION is missing.");
+}
+
 builder.Services.AddDbContext<UserDBContext>(options =>
-    options.UseMySql(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
-        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
-    ));
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
+);
 
 builder.Services.AddControllers();
 
