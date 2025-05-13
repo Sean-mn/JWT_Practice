@@ -37,7 +37,7 @@ public class LoginManager : MonoBehaviour
 
         if (req.result == UnityWebRequest.Result.Success)
         {
-            Debug.Log("로그인 성공: " + req.downloadHandler.text);
+            Debug.Log("로그인 성공");
 
             TokenResponse response = JsonUtility.FromJson<TokenResponse>(req.downloadHandler.text);
             PlayerPrefs.SetString("JWT_TOKEN", response.token);
