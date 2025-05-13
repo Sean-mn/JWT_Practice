@@ -15,11 +15,11 @@ namespace JWT_Practice.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly LoginDBContext _context;
+        private readonly UserDBContext _context;
         private readonly JwtSettings _jwtSettings;
         private readonly ILogger<AuthController> _logger;
 
-        public AuthController(LoginDBContext context, IOptions<JwtSettings> jwtSettings, ILogger<AuthController> logger)
+        public AuthController(UserDBContext context, IOptions<JwtSettings> jwtSettings, ILogger<AuthController> logger)
         {
             _context = context;
             _jwtSettings = jwtSettings.Value;

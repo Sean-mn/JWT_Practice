@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JWT_Practice.DBContexts;
 
-public class LoginDBContext : DbContext
+public class UserDBContext : DbContext
 {
-    public LoginDBContext(DbContextOptions<LoginDBContext> options) : base(options) { }
+    public UserDBContext(DbContextOptions<UserDBContext> options) : base(options) { }
     
     public DbSet<User> Users { get; set; }
 }
