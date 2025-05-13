@@ -57,11 +57,23 @@ namespace JWT_Practice.Controllers
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-        //
-        // [HttpPost("signup")]
-        // private IActionResult SignUp()
-        // {
-        //     
-        // }
+        
+        [HttpPost("signup")]
+        private IActionResult SignUp([FromBody] SignUpRequest request)
+        {
+            if (_context.Users.Any(u => u.Username == request.Username))
+                return Conflict("이미 존재하는 유저 이름입니다.");
+
+            var newUser = new User
+            {
+                Username = request.Username,
+                PasswordHash = request.Password
+            };
+            
+            _context.Users.Add(newUser);
+            _context.SaveChanges();
+            
+            return Ok("회원가입 성공");
+        }
     }
 }
