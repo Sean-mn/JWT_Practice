@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,10 +12,15 @@ public class UI_SignUp : MonoBehaviour
 
     private void Start()
     {
-        _signUpBtn?.onClick.AddListener(OnSignUped);
+        _signUpBtn?.onClick.AddListener(TrySignUped);
     }
 
-    private void OnSignUped()
+    private void TrySignUped()
+    {
+        StartCoroutine(OnSignUped());
+    }
+
+    private IEnumerator OnSignUped()
     {
         string username = _userNameInput.text;
         string password = _passwordInput.text;
@@ -22,12 +28,15 @@ public class UI_SignUp : MonoBehaviour
         if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
         {
             Debug.Log("아이디와 비밀번호를 입력해주세요.");
-            return;
+            yield break;
         }
 
-        SignupManager.Instance.SignUp(username, password);
+        yield return StartCoroutine(SignupManager.Instance.SignUp(username, password));
 
-        gameObject?.SetActive(false);
-        _loginPanel?.SetActive(true);
+        if (SignupManager.Instance.IsSignUped)
+        {
+            gameObject?.SetActive(false);
+            _loginPanel?.SetActive(true);
+        }
     }
 }

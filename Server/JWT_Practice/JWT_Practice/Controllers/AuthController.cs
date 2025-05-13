@@ -8,8 +8,6 @@ using JWT_Practice.DBContexts;
 using JWT_Practice.Models;
 using JWT_Practice.Request;
 using JWT_Practice.Setting;
-using Microsoft.Extensions.Logging;
-using System;
 
 namespace JWT_Practice.Controllers
 {
@@ -43,7 +41,7 @@ namespace JWT_Practice.Controllers
                 _logger.LogInformation("로그인 성공 - 유저이름: {Username}", user.Username);
 
                 var token = GenerateToken(user);
-                return Ok(new { token = token, username = user.Username });
+                return Ok(new { token = token, username = user.Username, id = user.Id });
             }
             catch (Exception ex)
             {

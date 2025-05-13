@@ -17,7 +17,7 @@ public class SignupManager : MonoBehaviour
     public static SignupManager Instance { get; private set; }
 
     private string _serverUrl = "http://localhost:5000/api/auth";
-    public bool IsSignUped { get; private set; }
+    public bool IsSignUped { get; private set; } = false;
 
     private void Awake()
     {
@@ -27,7 +27,7 @@ public class SignupManager : MonoBehaviour
             Destroy(this);
     }
 
-    public void SignUp(string username, string password)
+    public IEnumerator SignUp(string username, string password)
     {
         SignUpRequest request = new SignUpRequest
         {
@@ -36,7 +36,8 @@ public class SignupManager : MonoBehaviour
         };
 
         string jsonData = JsonUtility.ToJson(request);
-        StartCoroutine(PostSignUp(jsonData));
+
+        yield return PostSignUp(jsonData);
     }
 
     private IEnumerator PostSignUp(string json)
@@ -51,6 +52,7 @@ public class SignupManager : MonoBehaviour
 
         if (request.result == UnityWebRequest.Result.Success)
         {
+            IsSignUped = true;
             Debug.Log("회원가입 성공!");
         }
         else
