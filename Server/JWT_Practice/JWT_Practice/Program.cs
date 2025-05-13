@@ -20,7 +20,7 @@ var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSetting
 
 if (string.IsNullOrEmpty(jwtSettings.SecretKey))
 {
-    throw new Exception("JWT SecretKey is null. Check appsettings.json!");
+    throw new Exception("JWT SecretKey is null");
 }
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
